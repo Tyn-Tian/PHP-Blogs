@@ -36,3 +36,8 @@ create table comments (
     constraint fk_comments_blogs
     foreign key (blog_id) references blogs (id)
 ) engine = InnoDB;
+
+alter table users
+add unique key (email);
+
+desc users;
