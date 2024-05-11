@@ -17,7 +17,7 @@ class UserRepository
         $statement->execute([
             $user->id,
             $user->email,
-            $user->email,
+            $user->username,
             $user->password
         ]);
         return $user;
