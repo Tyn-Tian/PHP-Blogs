@@ -1,8 +1,12 @@
 <?php
 
+namespace Blog\Service;
+
 use Blog\Config\Database;
 use Blog\Domain\User;
 use Blog\Exception\ValidationException;
+use Blog\Model\UserRegisterRequest;
+use Blog\Model\UserRegisterResponse;
 use Blog\Repository\UserRepository;
 
 class UserService

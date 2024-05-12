@@ -1,5 +1,7 @@
 <?php
 
+namespace Blog\Model;
+
 class UserRegisterRequest
 {
     public ?string $id = null;
