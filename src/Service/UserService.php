@@ -23,6 +23,13 @@ class UserService
 
         try {
             Database::beginTransaction();
+
+            $user = $this->userRepository->findByEmail($request->email);
+
+            if ($user != null) {
+                throw new ValidationException("Email is registered");
+            }
+
             $user = new User();
             $user->id = $request->id;
             $user->email = $request->email;
