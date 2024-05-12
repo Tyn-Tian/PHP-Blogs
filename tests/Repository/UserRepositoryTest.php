@@ -76,4 +76,26 @@ class UserRepositoryTest extends TestCase
         self::assertNull($findUser1);
         self::assertNull($findUser2);
     }
+
+    public function testFindByEmailSuccess()
+    {
+        $user = new User();
+        $user->id = uniqid();
+        $user->email = "test@gmail.com";
+        $user->username = "testName";
+        $user->password = "testPass";
+
+        $newUser = $this->userRepository->save($user);
+
+        $findUser = $this->userRepository->findByEmail($user->email);
+
+        self::assertNotNull($findUser);
+        self::assertEquals($newUser, $findUser);
+    }
+
+    public function testFindByEmailNotFound()
+    {
+        $findUser = $this->userRepository->findByEmail("empty");
+        self::assertNull($findUser);
+    }
 }
