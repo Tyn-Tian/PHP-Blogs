@@ -74,4 +74,64 @@ class UserControllerTest extends TestCase
 
         $this->expectOutputRegex("[Email is registered]");
     }
+
+    public function testLogin()
+    {
+        $this->userController->login();
+
+        $this->expectOutputRegex("[Welcome Back.]");
+        $this->expectOutputRegex("[Email]");
+        $this->expectOutputRegex("[Password]");
+        $this->expectOutputRegex("[No account?]");
+    }
+
+    public function testPostLoginSuccess()
+    {
+        $user = new User();
+        $user->id = uniqid();
+        $user->email = "test@gmail.com";
+        $user->username = "testName";
+        $user->password = password_hash("testPass", PASSWORD_BCRYPT);
+        $this->userRepository->save($user);
+
+        $_POST['email'] = "test@gmail.com";
+        $_POST['password'] = "testPass";
+        $this->userController->postLogin();
+
+        $this->expectOutputRegex("[Location: /]");
+    }
+
+    public function testPostLoginValidationError()
+    {
+        $_POST['email'] = "";
+        $_POST['password'] = "";
+        $this->userController->postLogin();
+
+        $this->expectOutputRegex("[Email and Password cannot be blank]");
+    }
+
+    public function testPostLoginUserNotFound()
+    {
+        $_POST['email'] = "test@gmail.com";
+        $_POST['password'] = "testPass";
+        $this->userController->postLogin();
+
+        $this->expectOutputRegex("[Email or password is wrong]");
+    }
+
+    public function testPostLoginWrongPassword()
+    {
+        $user = new User();
+        $user->id = uniqid();
+        $user->email = "test@gmail.com";
+        $user->username = "testName";
+        $user->password = password_hash("testPass", PASSWORD_BCRYPT);
+        $this->userRepository->save($user);
+
+        $_POST['email'] = "test@gmail.com";
+        $_POST['password'] = "salah";
+        $this->userController->postLogin();
+
+        $this->expectOutputRegex("[Email or password is wrong]");
+    }
 }
