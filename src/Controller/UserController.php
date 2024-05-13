@@ -7,18 +7,24 @@ use Blog\Config\Database;
 use Blog\Exception\ValidationException;
 use Blog\Model\UserLoginRequest;
 use Blog\Model\UserRegisterRequest;
+use Blog\Repository\SessionRepository;
 use Blog\Repository\UserRepository;
+use Blog\Service\SessionService;
 use Blog\Service\UserService;
 
 class UserController
 {
+    private UserRepository $userRepository;
     private UserService $userService;
+    private SessionService $sessionService;
 
     public function __construct()
     {
         $connection = Database::getConnection();
-        $userRepository = new UserRepository($connection);
-        $this->userService = new UserService($userRepository);
+        $this->userRepository = new UserRepository($connection);
+        $sessionRepository = new SessionRepository($connection);
+        $this->userService = new UserService($this->userRepository);
+        $this->sessionService = new SessionService($sessionRepository, $this->userRepository);
     }
 
     public function register()
@@ -62,6 +68,8 @@ class UserController
 
         try {
             $this->userService->login($request);
+            $userId = $this->userRepository->findByEmail($request->email)->id;
+            $this->sessionService->create($userId);
             View::redirect('/');
         } catch (ValidationException $exception) {
             View::render('Users/login', [
