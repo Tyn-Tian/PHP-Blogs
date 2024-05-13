@@ -33,7 +33,7 @@
                 </div>
                 <div class="col-xl-6 col-lg-8">
                     <p class="fs-5 mt-3">Embark on a journey of inspiration and discovery through captivating stories and insightful articles.</p>
-                    <a href="#" class="btn btn-outline-success mt-5 btn-lg">Get reading</a>
+                    <a href="/users/register" class="btn btn-outline-success mt-5 btn-lg">Get reading</a>
                 </div>
             </div>
         </div>

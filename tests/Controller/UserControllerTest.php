@@ -3,6 +3,7 @@
 namespace Blog\Controller;
 
 use Blog\Config\Database;
+use Blog\Domain\User;
 use Blog\Repository\UserRepository;
 use PHPUnit\Framework\TestCase;
 
@@ -42,5 +43,35 @@ class UserControllerTest extends TestCase
         $this->userController->postRegister();
 
         $this->expectOutputRegex("[Location: /users/login]");
+    }
+
+    public function testPostRegisterValidationError()
+    {
+        $_POST['email'] = "";
+        $_POST['username'] = "";
+        $_POST['password'] = "";
+
+        $this->userController->postRegister();
+
+        $this->expectOutputRegex("[Email, username, password cannot be blank]");
+    }
+
+    public function testPostRegisterEmailRegistered()
+    {
+        $user = new User();
+        $user->id = uniqid();
+        $user->email = "test@gmail.com";
+        $user->username = "testName";
+        $user->password = "testPass";
+
+        $this->userRepository->save($user);
+
+        $_POST['email'] = "test@gmail.com";
+        $_POST['username'] = "testName2";
+        $_POST['password'] = "testPass2";
+
+        $this->userController->postRegister();
+
+        $this->expectOutputRegex("[Email is registered]");
     }
 }

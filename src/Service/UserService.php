@@ -54,7 +54,7 @@ class UserService
             $request->email == null || $request->username == null || $request->password == null ||
             trim($request->email) == "" || trim($request->username) == "" || trim($request->password) == ""
         ) {
-            throw new ValidationException("email, username, password cannot be blank");
+            throw new ValidationException("Email, username, password cannot be blank");
         }
     }
 }
