@@ -38,7 +38,7 @@ class SessionService
         setcookie(self::$COOKIE_NAME, '', 1, "/");
     }
 
-    public function current(): User
+    public function current(): ?User
     {
         $sessionId = $_COOKIE[self::$COOKIE_NAME] ?? "";
 
