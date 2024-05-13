@@ -8,7 +8,7 @@
     <?php } ?>
 
     <p class="fw-bold fs-3 text-center">Welcome <span style="color: #1e88e5;">Back</span>.</p>
-    <form class="pt-1" method="post" action="/users/register">
+    <form class="pt-1" method="post" action="/users/login">
         <div class="form-floating mb-3">
             <input type="email" name="email" class="form-control" placeholder="name@example.com">
             <label for="floatingInput">Email</label>
