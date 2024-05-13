@@ -5,6 +5,7 @@ namespace Blog\Service;
 use Blog\Config\Database;
 use Blog\Domain\User;
 use Blog\Exception\ValidationException;
+use Blog\Model\UserLoginRequest;
 use Blog\Model\UserRegisterRequest;
 use Blog\Repository\UserRepository;
 use PHPUnit\Framework\TestCase;
@@ -69,5 +70,66 @@ class UserServiceTest extends TestCase
         $request->password = "testPassRequest";
 
         $this->userService->register($request);
+    }
+
+    public function testLoginSuccess()
+    {
+        $user = new User();
+        $user->id = uniqid();
+        $user->email = "test@gmail.com";
+        $user->username = "testName";
+        $user->password = password_hash("testPass", PASSWORD_BCRYPT);  
+        $this->userRepository->save($user);
+
+        $request = new UserLoginRequest();
+        $request->email = "test@gmail.com";
+        $request->password = "testPass";
+
+        $response = $this->userService->login($request);
+
+        self::assertNotNull($response);
+        self::assertEquals($user->id, $response->user->id);
+        self::assertEquals($user->email, $response->user->email);
+        self::assertEquals($user->username, $response->user->username);
+    }
+
+    public function testLoginValidationError()
+    {
+        $request = new UserLoginRequest();
+        $request->email = "";
+        $request->password = "";
+
+        $this->expectException(ValidationException::class);
+
+        $this->userService->login($request);
+    }
+
+    public function testLoginUserNotFound()
+    {
+        $request = new UserLoginRequest();
+        $request->email = "test@gmail.com";
+        $request->password = "testPass";
+
+        $this->expectException(ValidationException::class);
+
+        $this->userService->login($request);
+    }
+
+    public function testLoginWrongPassword()
+    {
+        $user = new User();
+        $user->id = uniqid();
+        $user->email = "test@gmail.com";
+        $user->username = "testName";
+        $user->password = password_hash("testPass", PASSWORD_BCRYPT);  
+        $this->userRepository->save($user);
+
+        $request = new UserLoginRequest();
+        $request->email = "test@gmail.com";
+        $request->password = "salah";
+
+        $this->expectException(ValidationException::class);
+
+        $this->userService->login($request);
     }
 }

@@ -60,17 +60,17 @@ class UserService
         }
     }
 
-    public function login(UserLoginRequest $requeset): UserLoginResponse
+    public function login(UserLoginRequest $request): UserLoginResponse
     {
-        $this->validateUserLoginRequest($requeset);
+        $this->validateUserLoginRequest($request);
 
-        $user = $this->userRepository->findByEmail($requeset->email);
+        $user = $this->userRepository->findByEmail($request->email);
 
         if ($user == null) {
             throw new ValidationException("Email or password is wrong");
         }
 
-        if (password_verify($requeset->password, $user->password)) {
+        if (password_verify($request->password, $user->password)) {
             $response = new UserLoginResponse();
             $response->user = $user;
             return $response;
@@ -83,7 +83,7 @@ class UserService
     {
         if (
             $request->email == null || $request->password == null ||
-            trim($request->email) || trim($request->password)
+            trim($request->email) == "" || trim($request->password) == ""
         ) {
             throw new ValidationException("Email and Password cannot be blank");
         }
