@@ -14,7 +14,7 @@
                             <a class="nav-link" aria-current="page" href="#">Github</a>
                         </li>
                         <li class="nav-item d-sm-block d-none">
-                            <a class="nav-link" href="">Sign in</a>
+                            <a class="nav-link" href="/users/login">Sign in</a>
                         </li>
                         <li class="nav-item">
                             <a class="btn btn-outline-success" href="/users/register">Get started</a>
