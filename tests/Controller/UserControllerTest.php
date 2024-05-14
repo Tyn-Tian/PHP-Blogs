@@ -3,8 +3,11 @@
 namespace Blog\Controller;
 
 use Blog\Config\Database;
+use Blog\Domain\Session;
 use Blog\Domain\User;
+use Blog\Repository\SessionRepository;
 use Blog\Repository\UserRepository;
+use Blog\Service\SessionService;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . "/../helper/Helper.php";
@@ -13,12 +16,15 @@ class UserControllerTest extends TestCase
 {
     private UserController $userController;
     private UserRepository $userRepository;
+    private SessionRepository $sessionRepository;
 
     protected function setUp(): void
     {
         $this->userController = new UserController();
         $this->userRepository = new UserRepository(Database::getConnection());
+        $this->sessionRepository = new SessionRepository(Database::getConnection());
 
+        $this->sessionRepository->deleteAll();
         $this->userRepository->deleteAll();
         putenv("mode=test");
     }
@@ -133,5 +139,27 @@ class UserControllerTest extends TestCase
         $this->userController->postLogin();
 
         $this->expectOutputRegex("[Email or password is wrong]");
+    }
+
+    public function testLogout()
+    {
+        $user = new User();
+        $user->id = uniqid();
+        $user->email = "test@gmail.com";
+        $user->username = "testName";
+        $user->password = password_hash("testPass", PASSWORD_BCRYPT);
+        $this->userRepository->save($user);
+
+        $session = new Session();
+        $session->id = uniqid();
+        $session->userId = $user->id;
+        $this->sessionRepository->save($session);
+
+        $_COOKIE[SessionService::$COOKIE_NAME] = $session->id;
+
+        $this->userController->logout();
+
+        $this->expectOutputRegex("[Location: /]");
+        $this->expectOutputRegex("[X-TYN-SESSION: ]");
     }
 }
