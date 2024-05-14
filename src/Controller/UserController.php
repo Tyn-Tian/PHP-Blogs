@@ -78,4 +78,10 @@ class UserController
             ]);
         }
     }
+
+    public function logout()
+    {
+        $this->sessionService->destory();
+        View::redirect('/');
+    }
 }

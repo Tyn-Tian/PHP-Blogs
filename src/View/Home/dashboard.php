@@ -42,7 +42,7 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item py-0 opacity-75" href="#">Sign Out</a></li>
+                        <li><a class="dropdown-item py-0 opacity-75" href="/users/logout">Sign Out</a></li>
                     </ul>
                 </div>
             </div>
