@@ -4,6 +4,7 @@ use Blog\App\Router;
 use Blog\Config\Database;
 use Blog\Controller\HomeController;
 use Blog\Controller\UserController;
+use Blog\Controller\BlogController;
 use Blog\Middleware\MustLoginMiddleware;
 use Blog\Middleware\MustNotLoginMiddleware;
 
@@ -17,5 +18,7 @@ Router::add('POST', '/users/register', UserController::class, 'postRegister', [M
 Router::add('GET', '/users/login', UserController::class, 'login', [MustNotLoginMiddleware::class]);
 Router::add('POST', '/users/login', UserController::class, 'postLogin', [MustNotLoginMiddleware::class]);
 Router::add('GET', '/users/logout', UserController::class, 'logout', [MustLoginMiddleware::class]);
+Router::add('GET', '/new-blog', BlogController::class, 'newBlog', [MustLoginMiddleware::class]);
+Router::add('POST', '/new-blog', BlogController::class, 'postNewBlog', [MustLoginMiddleware::class]);
 
 Router::run();

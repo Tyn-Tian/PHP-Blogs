@@ -17,7 +17,7 @@
                 <a class="text-black opacity-50 d-block d-sm-none" href="#">
                     <i class="bi bi-search" style="font-size: 1.5rem;"></i>
                 </a>
-                <a class="d-md-flex d-none align-items-center text-decoration-none gap-2 fw-semibold text-black opacity-50" href="#">
+                <a class="d-md-flex d-none align-items-center text-decoration-none gap-2 fw-semibold text-black opacity-50" href="/new-blog">
                     <i class="bi bi-pencil-square" style="font-size: 1.5rem;"></i> Write
                 </a>
                 <div class="dropstart">
@@ -27,7 +27,7 @@
 
                     <ul class="dropdown-menu">
                         <li class="d-block d-md-none">
-                            <a class="dropdown-item d-flex align-items-center gap-3 py-0 opacity-75" href="#">
+                            <a class="dropdown-item d-flex align-items-center gap-3 py-0 opacity-75" href="/new-blog">
                                 <i class="bi bi-pencil-square" style="font-size: 1.5rem;"></i> Write
                             </a>
                         </li>
