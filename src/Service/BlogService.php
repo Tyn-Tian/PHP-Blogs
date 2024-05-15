@@ -25,7 +25,7 @@ class BlogService
 
             $blog = $this->blogRepository->findById($request->id);
 
-            if ($blog == null) {
+            if ($blog != null) {
                 throw new ValidationException("Blog is already Exist");
             }
 
