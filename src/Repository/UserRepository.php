@@ -69,4 +69,11 @@ class UserRepository
     {
         $this->connection->exec("DELETE FROM users");
     }
+
+    public function findAllBlog(string $userId)
+    {
+        $statement = $this->connection->prepare("SELECT users.username, blogs.id, blogs.title, blogs.content, blogs.created_at FROM users JOIN blogs on (users.id = blogs.user_id) WHERE users.id = ? ORDER BY blogs.created_at DESC");
+        $statement->execute([$userId]);
+        return $statement->fetchAll();
+    }
 }
