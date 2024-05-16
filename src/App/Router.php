@@ -28,7 +28,7 @@ class Router
         $method = $_SERVER["REQUEST_METHOD"];
 
         foreach (self::$routes as $route) {
-            $pattern = "#^" . $route['path'] . "$#";
+            $pattern = "#^" . preg_replace('/{([a-zA-Z0-9_-]+)}/', '([a-zA-Z0-9_-]+)', $route['path']) . "$#";
             if (preg_match($pattern, $path, $variables) && $method == $route["method"]) {
 
                 foreach ($route['middleware'] as $middleware) {
