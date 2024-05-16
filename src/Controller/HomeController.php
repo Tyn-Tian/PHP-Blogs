@@ -30,7 +30,8 @@ class HomeController
             ]);
         } else {
             View::render('Home/dashboard', [
-                "title" => "Blog PHP"
+                "title" => "Blog PHP",
+                "username" => $user->username
             ]);
         }
     }

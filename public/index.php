@@ -20,5 +20,6 @@ Router::add('POST', '/users/login', UserController::class, 'postLogin', [MustNot
 Router::add('GET', '/users/logout', UserController::class, 'logout', [MustLoginMiddleware::class]);
 Router::add('GET', '/new-blog', BlogController::class, 'newBlog', [MustLoginMiddleware::class]);
 Router::add('POST', '/new-blog', BlogController::class, 'postNewBlog', [MustLoginMiddleware::class]);
+Router::add('GET', '/{username}', UserController::class, 'profile', [MustLoginMiddleware::class]);
 
 Router::run();

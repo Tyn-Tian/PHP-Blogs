@@ -49,3 +49,43 @@
         </div>
     </nav>
 </header>
+
+<main>
+    <div class="container">
+        <div class="row p-lg-5 p-2 px-md-0">
+            <div class="col-12">
+                <a class="text-black text-decoration-none d-inline-block mb-3 mb-sm-4" href="">
+                    <h5 class="display-5 fw-semibold "><?= $model['username'] ?></h5>
+                </a>
+                <div>
+                    <ul class="gap-5 text-decoration-none nav border-bottom">
+                        <li class="nav-item border-bottom border-black pb-3">
+                            <a class="nav-link active p-0 text-black fw-semibold " href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link p-0 text-black fw-semibold " href="/">Liked</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row p-lg-5 p-3">
+                    <?php if (isset($model['blogs'])) {
+                        foreach ($model['blogs'] as $row) { ?>
+                            <div class="col-12 p-0 border-bottom mb-4">
+                                <div class="d-flex gap-2 align-items-center mb-2">
+                                    <i class="bi bi-person-fill" style="font-size: 1.2rem"></i>
+                                    <a class="text-black text-decoration-none" href="/user/profile"><?= $row['username'] ?></a>
+                                </div>
+                                <h6 class="fw-bold fs-2"><?= $row['title'] ?></h6>
+                                <p><?= $row['content'] ?></p>
+                                <?php 
+                                    $date = new DateTime($row['created_at']);
+                                ?>
+                                <p><?= $date->format('F j, Y') ?></p>
+                            </div>
+                        <?php } ?>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

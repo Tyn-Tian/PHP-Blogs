@@ -84,4 +84,16 @@ class UserController
         $this->sessionService->destory();
         View::redirect('/');
     }
+
+    public function profile($username)
+    {
+        $user = $this->sessionService->current();
+        $blogs = $this->userRepository->findAllBlog($user->id);
+
+        View::render('Users/profile', [
+            "title" => "$user->username - PHP Blog",
+            "username" => $user->username,
+            "blogs" => $blogs
+        ]);
+    }
 }
