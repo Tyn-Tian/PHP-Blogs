@@ -3,8 +3,10 @@
 namespace Blog\Controller;
 
 use Blog\Config\Database;
+use Blog\Domain\Blog;
 use Blog\Domain\Session;
 use Blog\Domain\User;
+use Blog\Repository\BlogRepository;
 use Blog\Repository\SessionRepository;
 use Blog\Repository\UserRepository;
 use Blog\Service\SessionService;
@@ -17,13 +19,16 @@ class UserControllerTest extends TestCase
     private UserController $userController;
     private UserRepository $userRepository;
     private SessionRepository $sessionRepository;
+    private BlogRepository $blogRepository;
 
     protected function setUp(): void
     {
         $this->userController = new UserController();
         $this->userRepository = new UserRepository(Database::getConnection());
         $this->sessionRepository = new SessionRepository(Database::getConnection());
+        $this->blogRepository = new BlogRepository(Database::getConnection());
 
+        $this->blogRepository->deleteAll();
         $this->sessionRepository->deleteAll();
         $this->userRepository->deleteAll();
         putenv("mode=test");
@@ -161,5 +166,33 @@ class UserControllerTest extends TestCase
 
         $this->expectOutputRegex("[Location: /]");
         $this->expectOutputRegex("[X-TYN-SESSION: ]");
+    }
+
+    public function testProfile()
+    {
+        $user = new User();
+        $user->id = uniqid();
+        $user->email = "test@gmail.com";
+        $user->username = "testName";
+        $user->password = password_hash("testPass", PASSWORD_BCRYPT);
+        $this->userRepository->save($user);
+
+        $session = new Session();
+        $session->id = uniqid();
+        $session->userId = $user->id;
+        $this->sessionRepository->save($session);
+        $_COOKIE[SessionService::$COOKIE_NAME] = $session->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $user->id;
+
+        $this->userController->profile($user->username);
+
+        $this->expectOutputRegex("[testName]");
+        $this->expectOutputRegex("[Home]");
+        $this->expectOutputRegex("[Liked]");
     }
 }
