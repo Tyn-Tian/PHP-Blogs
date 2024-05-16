@@ -1,17 +1,25 @@
 <?php
 
 use Blog\Config\Database;
+use Blog\Domain\Blog;
 use Blog\Domain\User;
+use Blog\Repository\BlogRepository;
+use Blog\Repository\SessionRepository;
 use Blog\Repository\UserRepository;
 use PHPUnit\Framework\TestCase;
 
 class UserRepositoryTest extends TestCase
 {
     private UserRepository $userRepository;
+    private BlogRepository $blogRepository;
 
     protected function setUp(): void
     {
         $this->userRepository = new UserRepository(Database::getConnection());
+        $this->blogRepository = new BlogRepository(Database::getConnection());
+        $sessionRepository = new SessionRepository(Database::getConnection());
+        $sessionRepository->deleteAll();
+        $this->blogRepository->deleteAll();
         $this->userRepository->deleteAll();
     }
 
@@ -97,5 +105,50 @@ class UserRepositoryTest extends TestCase
     {
         $findUser = $this->userRepository->findByEmail("empty");
         self::assertNull($findUser);
+    }
+
+    public function testFindAllBlog()
+    {
+        $user = new User();
+        $user->id = uniqid();
+        $user->email = "test@gmail.com";
+        $user->username = "testName";
+        $user->password = password_hash("testPass", PASSWORD_BCRYPT);
+        $this->userRepository->save($user);
+
+        $blog1 = new Blog();
+        $blog1->id = uniqid();
+        $blog1->title = "testTitle";
+        $blog1->content = "testContent";
+        $blog1->userId = $user->id;
+        $this->blogRepository->save($blog1);
+
+        $blog2 = new Blog();
+        $blog2->id = uniqid();
+        $blog2->title = "testTitle";
+        $blog2->content = "testContent";
+        $blog2->userId = $user->id;
+        $this->blogRepository->save($blog2);
+
+        $result = $this->userRepository->findAllBlog($user->id);
+
+        self::assertIsArray($result);
+        self::assertCount(2, $result);
+    }
+
+
+    public function testFindAllBlogEmpty()
+    {
+        $user = new User();
+        $user->id = uniqid();
+        $user->email = "test@gmail.com";
+        $user->username = "testName";
+        $user->password = password_hash("testPass", PASSWORD_BCRYPT);
+        $this->userRepository->save($user);
+
+        $result = $this->userRepository->findAllBlog($user->id);
+
+        self::assertIsArray($result);
+        self::assertCount(0, $result);
     }
 }
