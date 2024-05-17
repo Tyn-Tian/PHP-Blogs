@@ -87,4 +87,59 @@ class BlogRepositoryTest extends TestCase
         $findBlog = $this->blogRepository->findById($blog->id);
         self::assertNull($findBlog);
     }
+
+    public function testFindAllBlogExceptCurrentUser()
+    {
+        $user1 = new User();
+        $user1->id = uniqid();
+        $user1->email = "test1@gmail.com";
+        $user1->username = "test1Name";
+        $user1->password = password_hash("test1Pass", PASSWORD_BCRYPT);
+        $this->userRepository->save($user1);
+
+        $blog1 = new Blog();
+        $blog1->id = uniqid();
+        $blog1->title = "test1Title";
+        $blog1->content = "test1Content";
+        $blog1->userId = $user1->id;
+        $this->blogRepository->save($blog1);
+
+        $user2 = new User();
+        $user2->id = uniqid();
+        $user2->email = "test2@gmail.com";
+        $user2->username = "test2Name";
+        $user2->password = password_hash("test1Pass", PASSWORD_BCRYPT);
+        $this->userRepository->save($user2);
+
+        $blog2 = new Blog();
+        $blog2->id = uniqid();
+        $blog2->title = "test2Title";
+        $blog2->content = "test2Content";
+        $blog2->userId = $user2->id;
+        $this->blogRepository->save($blog2);
+
+        $result = $this->blogRepository->findAllBlogExceptCurrentUser($user1->id);
+        self::assertIsArray($result);
+        self::assertCount(1, $result);
+    }
+
+    public function testFindAllBlogExceptCurrentUserEmpty() 
+    {
+        $user1 = new User();
+        $user1->id = uniqid();
+        $user1->email = "test1@gmail.com";
+        $user1->username = "test1Name";
+        $user1->password = password_hash("test1Pass", PASSWORD_BCRYPT);
+        $this->userRepository->save($user1);
+
+        $blog1 = new Blog();
+        $blog1->id = uniqid();
+        $blog1->title = "test1Title";
+        $blog1->content = "test1Content";
+        $blog1->userId = $user1->id;
+        $this->blogRepository->save($blog1);
+
+        $result = $this->blogRepository->findAllBlogExceptCurrentUser($user1->id);
+        self::assertNull($result);
+    }
 }
