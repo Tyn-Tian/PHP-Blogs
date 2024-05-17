@@ -148,7 +148,6 @@ class UserRepositoryTest extends TestCase
 
         $result = $this->userRepository->findAllBlog($user->id);
 
-        self::assertIsArray($result);
-        self::assertCount(0, $result);
+        self::assertNull($result);
     }
 }
