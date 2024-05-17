@@ -2,7 +2,7 @@
     <nav class="navbar navbar-expand px-1 border-bottom">
         <div class="container-fluid">
             <div class="d-flex align-items-center">
-                <a class="navbar-brand d-flex align-items-center gap-3 fw-bold" href="#">
+                <a class="navbar-brand d-flex align-items-center gap-3 fw-bold" href="/">
                     <i class="bi bi-journal-text" style="font-size: 2rem; color: #1e88e5;"></i>
                     <span>
                         PHP <span style="color: #1e88e5;">Blog</span>

@@ -2,7 +2,7 @@
     <header>
         <nav class="navbar navbar-expand px-1">
             <div class="container">
-                <a class="navbar-brand d-flex align-items-center gap-3 fw-bold" href="#">
+                <a class="navbar-brand d-flex align-items-center gap-3 fw-bold" href="/">
                     <i class="bi bi-journal-text" style="font-size: 2rem; color: #1e88e5;"></i>
                     <span>
                         PHP <span style="color: #1e88e5;">Blog</span>
@@ -19,7 +19,7 @@
                                 <hr class="dropdown-divider">
                             </li>
                             <li>
-                                <a class="dropdown-item d-flex align-items-center gap-3 py-0 opacity-75" href="#">
+                                <a class="dropdown-item d-flex align-items-center gap-3 py-0 opacity-75" href="/<?= $model['username'] ?>">
                                     <i class="bi bi-person" style="font-size: 1.5rem;"></i> Profile
                                 </a>
                             </li>

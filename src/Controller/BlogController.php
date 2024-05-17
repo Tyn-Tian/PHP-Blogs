@@ -28,8 +28,11 @@ class BlogController
 
     public function newBlog()
     {
+        $user = $this->sessionService->current();
+
         View::render('Blog/new-blog', [
-            "title" => "New Blog - PHP Blog"
+            "title" => "New Blog - PHP Blog",
+            "username" => $user->username
         ]);
     }
 
