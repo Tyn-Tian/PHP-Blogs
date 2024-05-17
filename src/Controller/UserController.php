@@ -85,7 +85,7 @@ class UserController
         View::redirect('/');
     }
 
-    public function profile($username)
+    public function userProfile($username)
     {
         $user = $this->sessionService->current();
         $blogs = $this->userRepository->findAllBlog($user->id);
