@@ -64,13 +64,13 @@ class UserRepositoryTest extends TestCase
         $user1 = new User();
         $user1->id = uniqid();
         $user1->email = "test1@gmail.com";
-        $user1->username = "testName";
+        $user1->username = "testName1";
         $user1->password = "testPass";
 
         $user2 = new User();
         $user2->id = uniqid();
         $user2->email = "test2@gmail.com";
-        $user2->username = "testName";
+        $user2->username = "testName2";
         $user2->password = "testPass";
 
         $this->userRepository->save($user1);
@@ -102,6 +102,28 @@ class UserRepositoryTest extends TestCase
     }
 
     public function testFindByEmailNotFound()
+    {
+        $findUser = $this->userRepository->findByEmail("empty");
+        self::assertNull($findUser);
+    }
+
+    public function testFindByUsernameSuccess()
+    {
+        $user = new User();
+        $user->id = uniqid();
+        $user->email = "test@gmail.com";
+        $user->username = "testName";
+        $user->password = "testPass";
+
+        $newUser = $this->userRepository->save($user);
+
+        $findUser = $this->userRepository->findByUsername($user->username);
+
+        self::assertNotNull($findUser);
+        self::assertEquals($newUser, $findUser);
+    }
+
+    public function testFindByUsernameNotFound()
     {
         $findUser = $this->userRepository->findByEmail("empty");
         self::assertNull($findUser);
