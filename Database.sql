@@ -40,4 +40,7 @@ create table comments (
 alter table users
 add unique key (email);
 
+alter table users
+add unique key (username);
+
 desc users;
