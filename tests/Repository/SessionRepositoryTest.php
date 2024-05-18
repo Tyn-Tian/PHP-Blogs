@@ -16,6 +16,8 @@ class SessionRepositoryTest extends TestCase
     {
         $this->userRepository = new UserRepository(Database::getConnection());
         $this->sessionRepository = new SessionRepository(Database::getConnection());
+        $blogRepository = new BlogRepository(Database::getConnection());
+        $blogRepository->deleteAll();
         $this->sessionRepository->deleteAll();
         $this->userRepository->deleteAll();
 

@@ -7,6 +7,8 @@ use Blog\Domain\User;
 use Blog\Exception\ValidationException;
 use Blog\Model\UserLoginRequest;
 use Blog\Model\UserRegisterRequest;
+use Blog\Repository\BlogRepository;
+use Blog\Repository\SessionRepository;
 use Blog\Repository\UserRepository;
 use PHPUnit\Framework\TestCase;
 
@@ -18,8 +20,12 @@ class UserServiceTest extends TestCase
     protected function setUp(): void
     {
         $this->userRepository = new UserRepository(Database::getConnection());
+        $sessionRepository = new SessionRepository(Database::getConnection());
+        $blogRepository = new BlogRepository(Database::getConnection());
         $this->userService = new UserService($this->userRepository);
 
+        $blogRepository->deleteAll();
+        $sessionRepository->deleteAll();
         $this->userRepository->deleteAll();
     }
 

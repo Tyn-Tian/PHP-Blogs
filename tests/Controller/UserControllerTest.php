@@ -189,7 +189,7 @@ class UserControllerTest extends TestCase
         $blog->content = "testContent";
         $blog->userId = $user->id;
 
-        $this->userController->profile($user->username);
+        $this->userController->userProfile($user->username);
 
         $this->expectOutputRegex("[testName]");
         $this->expectOutputRegex("[Home]");

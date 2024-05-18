@@ -38,13 +38,13 @@ class BlogController
 
     public function postNewBlog()
     {
-        $userId = $this->sessionService->current()->id;
+        $user = $this->sessionService->current();
 
         $request = new NewblogRequest();
         $request->id = uniqid();
         $request->title = $_POST['title'];
         $request->content = $_POST['content'];
-        $request->userId = $userId;
+        $request->userId = $user->id;
 
         try {
             $this->blogService->addNewBlog($request);
@@ -52,6 +52,7 @@ class BlogController
         } catch (ValidationException $exception) {
             View::render('Blog/new-blog', [
                 "title" => "New Blog - PHP Blog",
+                "username" => $user->username,
                 "error" => $exception->getMessage()
             ]);
         }

@@ -5,6 +5,7 @@ namespace Blog\Service;
 use Blog\Config\Database;
 use Blog\Domain\Session;
 use Blog\Domain\User;
+use Blog\Repository\BlogRepository;
 use Blog\Repository\SessionRepository;
 use Blog\Repository\UserRepository;
 use PHPUnit\Framework\TestCase;
@@ -22,7 +23,9 @@ class SessionServiceTest extends TestCase
         $this->sessionRepository = new SessionRepository(Database::getConnection());
         $this->userRepository = new UserRepository(Database::getConnection());
         $this->sessionService = new SessionService($this->sessionRepository, $this->userRepository);
+        $blogRepository = new BlogRepository(Database::getConnection());
 
+        $blogRepository->deleteAll();
         $this->sessionRepository->deleteAll();
         $this->userRepository->deleteAll();
 
