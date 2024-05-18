@@ -47,7 +47,7 @@ class BlogRepository
 
     public function findAllBlogExceptCurrentUser($userId)
     {
-        $statement = $this->connection->prepare("SELECT blogs.id, blogs.title, blogs.content, blogs.created_at, users.username FROM blogs JOIN users on (blogs.user_id = users.id) WHERE users.id != ?");
+        $statement = $this->connection->prepare("SELECT blogs.id, blogs.title, blogs.content, blogs.created_at, users.username FROM blogs JOIN users on (blogs.user_id = users.id) WHERE users.id != ? ORDER BY blogs.created_at DESC");
         $statement->execute([$userId]);
 
         try {
