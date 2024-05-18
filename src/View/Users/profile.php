@@ -69,14 +69,15 @@
                 </div>
                 <div class="row p-lg-5 p-3">
                     <?php if (isset($model['blogs'])) {
-                        foreach ($model['blogs'] as $row) { ?>
+                        foreach ($model['blogs'] as $row) { 
+                            $content = preg_replace('/<p([^>]*)>/', '<p$1 class="limited-paragraph">', $row['content']); ?>
                             <div class="col-12 p-0 border-bottom mb-4">
                                 <div class="d-flex gap-2 align-items-center mb-2">
                                     <i class="bi bi-person-fill" style="font-size: 1.2rem"></i>
                                     <a class="text-black text-decoration-none" href="/user/profile"><?= $row['username'] ?></a>
                                 </div>
                                 <h6 class="fw-bold fs-2"><?= $row['title'] ?></h6>
-                                <p><?= $row['content'] ?></p>
+                                <?= $content ?>
                                 <?php 
                                     $date = new DateTime($row['created_at']);
                                 ?>
