@@ -142,4 +142,22 @@ class BlogRepositoryTest extends TestCase
         $result = $this->blogRepository->findAllBlogExceptCurrentUser($user1->id);
         self::assertNull($result);
     }
+
+    public function testDeleteById()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "test1Title";
+        $blog->content = "test1Content";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $this->blogRepository->deleteById($blog->id);
+
+        $findBlog = $this->blogRepository->findById($blog->id);
+
+        self::assertNull($findBlog);
+    }
 }
