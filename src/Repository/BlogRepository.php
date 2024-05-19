@@ -65,4 +65,10 @@ class BlogRepository
     {
         $this->connection->exec("DELETE FROM blogs");
     }
+
+    public function deleteById(string $blogId): void
+    {
+        $statement = $this->connection->prepare("DELETE FROM blogs WHERE id = ?");
+        $statement->execute([$blogId]);
+    }
 }
