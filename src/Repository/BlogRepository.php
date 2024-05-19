@@ -71,4 +71,15 @@ class BlogRepository
         $statement = $this->connection->prepare("DELETE FROM blogs WHERE id = ?");
         $statement->execute([$blogId]);
     }
+
+    public function update(Blog $blog): Blog
+    {
+        $statement = $this->connection->prepare("UPDATE blogs SET title = ?, content = ?, created_at = CURRENT_TIMESTAMP WHERE id = ?");
+        $statement->execute([
+            $blog->title,
+            $blog->content,
+            $blog->id
+        ]);
+        return $blog;
+    }
 }
