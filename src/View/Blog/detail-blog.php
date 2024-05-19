@@ -52,6 +52,7 @@
 
 <main>
     <div class="container mt-lg-5 mt-3" style="max-width: 700px;">
+        <?php $content = preg_replace('/<p([^>]*)>/', '<p$1 class="fs-5">', $model["blog"]->content); ?>
         <h1 class="fw-bold display-5 mb-0"><?= $model["blog"]->title ?></h1>
         <?php
         $date = new DateTime($model["blog"]->createdAt);
@@ -61,6 +62,6 @@
             <i class="bi bi-person-fill" style="font-size: 1.2rem"></i>
             <a class="text-black text-decoration-none" href="/<?= $model['username'] ?>"><?= $model['username'] ?></a>
         </div>
-        <?= $model["blog"]->content ?>
+        <?= $content ?>
     </div>
 </main>
