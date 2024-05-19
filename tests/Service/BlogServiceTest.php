@@ -89,4 +89,38 @@ class BlogServiceTest extends TestCase
 
         $this->blogService->addNewBlog($request);
     }
+
+    public function testDeleteBlogSuccess()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $this->blogService->deleteBlog($blog->id);
+
+        $findBlog = $this->blogRepository->findById($blog->id);
+
+        self::assertNull($findBlog);
+    }
+
+    public function testDeleteBlogNotFound()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $this->expectException(ValidationException::class);
+
+        $this->blogService->deleteBlog("not found");
+    }
 }
