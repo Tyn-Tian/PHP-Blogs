@@ -88,12 +88,21 @@ class UserController
     public function userProfile($username)
     {
         $user = $this->sessionService->current();
-        $blogs = $this->userRepository->findAllBlog($user->id);
+        $currentProfile = ($user->username == $username);
+
+        if ($currentProfile) {
+            $blogs = $this->userRepository->findAllBlog($user->id);
+            
+        } else {
+            $userId = $this->userRepository->findByUsername($username)->id;
+            $blogs = $this->userRepository->findAllBlog($userId);
+        }
 
         View::render('Users/profile', [
             "title" => "$user->username - PHP Blog",
-            "username" => $user->username,
-            "blogs" => $blogs
+            "username" => $username,
+            "blogs" => $blogs,
+            "currentProfile" => $currentProfile
         ]);
     }
 }

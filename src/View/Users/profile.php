@@ -74,7 +74,7 @@
                             <div class="col-12 p-0 border-bottom mb-4">
                                 <div class="d-flex gap-2 align-items-center mb-2">
                                     <i class="bi bi-person-fill" style="font-size: 1.2rem"></i>
-                                    <a class="text-black text-decoration-none" href="/user/profile"><?= $row['username'] ?></a>
+                                    <a class="text-black text-decoration-none" href="/<?= $row['username'] ?>"><?= $row['username'] ?></a>
                                 </div>
                                 <h6 class="fw-bold fs-2"><?= $row['title'] ?></h6>
                                 <?= $content ?>
