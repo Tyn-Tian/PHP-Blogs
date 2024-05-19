@@ -82,14 +82,7 @@ class BlogController
             $this->blogService->deleteBlog($blogId, $user->id);
             View::redirect("/");
         } catch (ValidationException $exception) {
-            $blogs = $this->blogRepository->findAllBlogExceptCurrentUser($user->id);
-
-            View::render('Home/dashboard', [
-                "title" => "Blog PHP",
-                "username" => $user->username,
-                "blogs" => $blogs,
-                "error" => $exception->getMessage()
-            ]);
+            View::redirect("/blog-$blogId/detail");
         }
     }
 }
