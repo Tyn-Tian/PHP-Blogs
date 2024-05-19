@@ -57,7 +57,7 @@ class BlogService
         }
     }
 
-    public function deleteBlog(string $blogId)
+    public function deleteBlog(string $blogId, string $userId)
     {
         try {
             Database::beginTransaction();
@@ -66,6 +66,10 @@ class BlogService
 
             if ($blog == null) {
                 throw new ValidationException("Blog not found");
+            }
+
+            if ($blog->userId != $userId) {
+                throw new ValidationException("This blog is not yours");
             }
 
             $this->blogRepository->deleteById($blogId);
