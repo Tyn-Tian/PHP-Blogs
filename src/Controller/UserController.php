@@ -101,6 +101,7 @@ class UserController
         View::render('Users/profile', [
             "title" => "$user->username - PHP Blog",
             "username" => $username,
+            "currentUsername" => $user->username,
             "blogs" => $blogs,
             "currentProfile" => $currentProfile
         ]);

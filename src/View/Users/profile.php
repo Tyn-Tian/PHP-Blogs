@@ -35,7 +35,7 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <a class="dropdown-item d-flex align-items-center gap-3 py-0 opacity-75" href="/<?= $model['username'] ?>">
+                            <a class="dropdown-item d-flex align-items-center gap-3 py-0 opacity-75" href="/<?= $model['currentUsername'] ?>">
                                 <i class="bi bi-person" style="font-size: 1.5rem;"></i> Profile
                             </a>
                         </li>
