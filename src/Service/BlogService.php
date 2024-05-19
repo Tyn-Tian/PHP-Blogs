@@ -56,4 +56,23 @@ class BlogService
             throw new ValidationException("Title and Content cannot be blank");
         }
     }
+
+    public function deleteBlog(string $blogId)
+    {
+        try {
+            Database::beginTransaction();
+            
+            $blog = $this->blogRepository->findById($blogId);
+
+            if ($blog == null) {
+                throw new ValidationException("Blog not found");
+            }
+
+            $this->blogRepository->deleteById($blogId);
+            Database::commit();
+        } catch (ValidationException $exception) {
+            Database::rollBack();
+            throw $exception;
+        }
+    }
 }
