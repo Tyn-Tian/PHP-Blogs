@@ -6,6 +6,7 @@ use Blog\Config\Database;
 use Blog\Domain\Blog;
 use Blog\Domain\User;
 use Blog\Exception\ValidationException;
+use Blog\Model\EditBlogRequest;
 use Blog\Model\NewblogRequest;
 use Blog\Model\NewBlogResponse;
 use Blog\Repository\BlogRepository;
@@ -138,5 +139,28 @@ class BlogServiceTest extends TestCase
         $this->expectException(ValidationException::class);
         
         $this->blogService->deleteBlog($blog->id, uniqid());
+    }
+
+    public function testEditBlogSuccess()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $request = new EditBlogRequest();
+        $request->id = $blog->id;
+        $request->title = "testTitleChange";
+        $request->content = "testContentChange";
+        $request->userId = $blog->userId;
+
+        $response = $this->blogService->editBlog($request, $userId);
+
+        self::assertEquals($request->title, $response->blog->title);
+        self::assertEquals($request->content, $response->blog->content);
     }
 }
