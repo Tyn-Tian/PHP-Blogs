@@ -160,4 +160,23 @@ class BlogRepositoryTest extends TestCase
 
         self::assertNull($findBlog);
     }
+
+    public function testUpdate()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $blog->title = "testTitleChange";
+        $blog->content = "testContentChange";
+        $response = $this->blogRepository->update($blog);
+
+        self::assertEquals($blog->title, $response->title);
+        self::assertEquals($blog->content, $response->content);
+    }
 }
