@@ -80,7 +80,6 @@ class BlogRepository
             $blog->content,
             $blog->id
         ]);
-        $blog = $this->findById($blog->id);
         return $blog;
     }
 }

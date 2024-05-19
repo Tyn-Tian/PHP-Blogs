@@ -5,6 +5,8 @@ namespace Blog\Service;
 use Blog\Config\Database;
 use Blog\Domain\Blog;
 use Blog\Exception\ValidationException;
+use Blog\Model\EditBlogRequest;
+use Blog\Model\EditBlogResponse;
 use Blog\Model\NewblogRequest;
 use Blog\Model\NewBlogResponse;
 use Blog\Repository\BlogRepository;
@@ -77,6 +79,51 @@ class BlogService
         } catch (ValidationException $exception) {
             Database::rollBack();
             throw $exception;
+        }
+    }
+
+    public function editBlog(EditBlogRequest $request, string $userId): EditBlogResponse
+    {
+        $this->validateEditBlog($request);
+
+        try {
+            Database::beginTransaction();
+
+            $blog = $this->blogRepository->findById($request->id);
+
+            if ($blog == null) {
+                throw new ValidationException("Blog not found");
+            }
+
+            if ($request->userId != $userId) {
+                throw new ValidationException("This blog is not yours");
+            }
+
+            $blog = new Blog();
+            $blog->id = $request->id;
+            $blog->title = $request->title;
+            $blog->content = $request->content;
+
+            $this->blogRepository->update($blog);
+
+            $response = new EditBlogResponse();
+            $response->blog = $this->blogRepository->findById($blog->id);
+
+            Database::commit();
+            return $response;
+        } catch (ValidationException $exception) {
+            Database::rollBack();
+            throw $exception;
+        }
+    }
+
+    private function validateEditBlog(EditBlogRequest $request) 
+    {
+        if (
+            $request->title == null || $request->content == null ||
+            trim($request->title) == "" || trim($request->content) == ""
+        ) {
+            throw new ValidationException("Title and Content cannot be blank");
         }
     }
 }
