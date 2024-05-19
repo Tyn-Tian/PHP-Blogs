@@ -92,4 +92,41 @@ class BlogControllerTest extends TestCase
         $this->expectOutputRegex("[testTitle]");
         $this->expectOutputRegex("[testContent]");
     }
+
+    public function testPostDeleteBlog()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $this->blogController->postDeleteBlog($blog->id);
+
+        $this->expectOutputRegex("[Location: /]");
+    }
+
+    public function testPostDeleteBlogValidationError()
+    {
+        $otherUser = new User();
+        $otherUser->id = uniqid();
+        $otherUser->email = "test2@gmail.com";
+        $otherUser->username = "test2Name";
+        $otherUser->password = password_hash("testPass", PASSWORD_BCRYPT);
+        $this->userRepository->save($otherUser);
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $otherUser->id;
+        $this->blogRepository->save($blog);
+
+        $this->blogController->postDeleteBlog($blog->id);
+
+        $this->expectOutputRegex("[Location: /blog-$blog->id/detail]");
+    }
 }
