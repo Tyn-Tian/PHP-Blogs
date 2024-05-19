@@ -12,7 +12,7 @@ use Blog\Repository\UserRepository;
 use Blog\Service\BlogService;
 use Blog\Service\SessionService;
 
-class BlogController 
+class BlogController
 {
     private BlogService $blogService;
     private SessionService $sessionService;
@@ -72,5 +72,24 @@ class BlogController
             "currentUsername" => $currentUser->username,
             "username" => $username
         ]);
+    }
+
+    public function postDeleteBlog($blogId)
+    {
+        $user = $this->sessionService->current();
+
+        try {
+            $this->blogService->deleteBlog($blogId, $user->id);
+            View::redirect("/");
+        } catch (ValidationException $exception) {
+            $blogs = $this->blogRepository->findAllBlogExceptCurrentUser($user->id);
+
+            View::render('Home/dashboard', [
+                "title" => "Blog PHP",
+                "username" => $user->username,
+                "blogs" => $blogs,
+                "error" => $exception->getMessage()
+            ]);
+        }
     }
 }

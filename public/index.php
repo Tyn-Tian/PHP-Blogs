@@ -22,5 +22,6 @@ Router::add('GET', '/new-blog', BlogController::class, 'newBlog', [MustLoginMidd
 Router::add('POST', '/new-blog', BlogController::class, 'postNewBlog', [MustLoginMiddleware::class]);
 Router::add('GET', '/{username}', UserController::class, 'userProfile', [MustLoginMiddleware::class]);
 Router::add('GET', '/blog-{blogId}/detail', BlogController::class, 'blogDetail', [MustLoginMiddleware::class]);
+Router::add('GET', '/delete/{blogId}', BlogController::class, 'postDeleteBlog', [MustLoginMiddleware::class]);
 
 Router::run();

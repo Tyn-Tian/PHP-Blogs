@@ -69,19 +69,26 @@
                 </div>
                 <div class="row p-lg-5 p-3">
                     <?php if (isset($model['blogs'])) {
-                        foreach ($model['blogs'] as $row) { 
+                        foreach ($model['blogs'] as $row) {
                             $content = preg_replace('/<p([^>]*)>/', '<p$1 class="limited-paragraph">', $row['content']); ?>
                             <div class="col-12 p-0 border-bottom mb-4">
                                 <div class="d-flex gap-2 align-items-center mb-2">
                                     <i class="bi bi-person-fill" style="font-size: 1.2rem"></i>
                                     <a class="text-black text-decoration-none" href="/<?= $row['username'] ?>"><?= $row['username'] ?></a>
                                 </div>
-                                <a href="/blog-<?= $row['id'] ?>/detail" class="text-black text-decoration-none"><h6 class="fw-bold fs-2"><?= $row['title'] ?></h6></a>
+                                <a href="/blog-<?= $row['id'] ?>/detail" class="text-black text-decoration-none">
+                                    <h6 class="fw-bold fs-2"><?= $row['title'] ?></h6>
+                                </a>
                                 <?= $content ?>
-                                <?php 
-                                    $date = new DateTime($row['created_at']);
+                                <?php
+                                $date = new DateTime($row['created_at']);
                                 ?>
                                 <p><?= $date->format('F j, Y') ?></p>
+                                <?php if ($model["currentProfile"]) { ?>
+                                    <div class="d-flex mb-3">
+                                        <a href="/delete/<?= $row["id"] ?>" class="btn btn-outline-danger">Delete Blog</a>
+                                    </div>
+                                <?php } ?>
                             </div>
                         <?php } ?>
                     <?php } ?>
