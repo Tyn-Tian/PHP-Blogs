@@ -101,7 +101,7 @@ class BlogServiceTest extends TestCase
         $blog->userId = $userId;
         $this->blogRepository->save($blog);
 
-        $this->blogService->deleteBlog($blog->id);
+        $this->blogService->deleteBlog($blog->id, $userId);
 
         $findBlog = $this->blogRepository->findById($blog->id);
 
@@ -121,6 +121,22 @@ class BlogServiceTest extends TestCase
 
         $this->expectException(ValidationException::class);
 
-        $this->blogService->deleteBlog("not found");
+        $this->blogService->deleteBlog("not found", $userId);
+    }
+
+    public function testDeleteBlogUserIdNotSame()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $this->expectException(ValidationException::class);
+        
+        $this->blogService->deleteBlog($blog->id, uniqid());
     }
 }
