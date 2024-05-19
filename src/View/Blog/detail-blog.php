@@ -51,42 +51,16 @@
 </header>
 
 <main>
-    <div class="container">
-        <div class="row p-lg-5 p-2 px-md-0">
-            <div class="col-12">
-                <a class="text-black text-decoration-none d-inline-block mb-3 mb-sm-4" href="">
-                    <h5 class="display-5 fw-semibold "><?= $model['username'] ?></h5>
-                </a>
-                <div>
-                    <ul class="gap-5 text-decoration-none nav border-bottom">
-                        <li class="nav-item border-bottom border-black pb-3">
-                            <a class="nav-link active p-0 text-black fw-semibold " href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link p-0 text-black fw-semibold " href="/">Liked</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="row p-lg-5 p-3">
-                    <?php if (isset($model['blogs'])) {
-                        foreach ($model['blogs'] as $row) { 
-                            $content = preg_replace('/<p([^>]*)>/', '<p$1 class="limited-paragraph">', $row['content']); ?>
-                            <div class="col-12 p-0 border-bottom mb-4">
-                                <div class="d-flex gap-2 align-items-center mb-2">
-                                    <i class="bi bi-person-fill" style="font-size: 1.2rem"></i>
-                                    <a class="text-black text-decoration-none" href="/<?= $row['username'] ?>"><?= $row['username'] ?></a>
-                                </div>
-                                <a href="/blog-<?= $row['id'] ?>/detail" class="text-black text-decoration-none"><h6 class="fw-bold fs-2"><?= $row['title'] ?></h6></a>
-                                <?= $content ?>
-                                <?php 
-                                    $date = new DateTime($row['created_at']);
-                                ?>
-                                <p><?= $date->format('F j, Y') ?></p>
-                            </div>
-                        <?php } ?>
-                    <?php } ?>
-                </div>
-            </div>
+    <div class="container mt-lg-5 mt-3" style="max-width: 700px;">
+        <h1 class="fw-bold display-5 mb-0"><?= $model["blog"]->title ?></h1>
+        <?php
+        $date = new DateTime($model["blog"]->createdAt);
+        ?>
+        <p class="p-0 mb-3"><?= $date->format('F j, Y') ?></p>
+        <div class="d-flex gap-2 align-items-center mb-2 border-bottom pb-lg-4 pb-3">
+            <i class="bi bi-person-fill" style="font-size: 1.2rem"></i>
+            <a class="text-black text-decoration-none" href="/<?= $model['username'] ?>"><?= $model['username'] ?></a>
         </div>
+        <?= $model["blog"]->content ?>
     </div>
 </main>

@@ -61,7 +61,7 @@
                             <i class="bi bi-person-fill" style="font-size: 1.2rem"></i>
                             <a class="text-black text-decoration-none" href="/<?= $row['username'] ?>"><?= $row['username'] ?></a>
                         </div>
-                        <h6 class="fw-bold fs-2"><?= $row['title'] ?></h6>
+                        <a href="/blog-<?= $row['id'] ?>/detail" class="text-black text-decoration-none"><h6 class="fw-bold fs-2"><?= $row['title'] ?></h6></a>
                         <?= $content ?>
                         <?php
                         $date = new DateTime($row['created_at']);

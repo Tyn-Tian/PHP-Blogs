@@ -16,14 +16,16 @@ class BlogController
 {
     private BlogService $blogService;
     private SessionService $sessionService;
+    private BlogRepository $blogRepository;
+    private UserRepository $userRepository;
 
     public function __construct()
     {
-        $blogRepository = new BlogRepository(Database::getConnection());
+        $this->blogRepository = new BlogRepository(Database::getConnection());
         $sessionRepository = new SessionRepository(Database::getConnection());
-        $userRepository = new UserRepository(Database::getConnection());
-        $this->blogService = new BlogService($blogRepository);
-        $this->sessionService = new SessionService($sessionRepository, $userRepository);
+        $this->userRepository = new UserRepository(Database::getConnection());
+        $this->blogService = new BlogService($this->blogRepository);
+        $this->sessionService = new SessionService($sessionRepository, $this->userRepository);
     }
 
     public function newBlog()
@@ -56,5 +58,19 @@ class BlogController
                 "error" => $exception->getMessage()
             ]);
         }
+    }
+
+    public function blogDetail($blogId)
+    {
+        $currentUser = $this->sessionService->current();
+        $blog = $this->blogRepository->findById($blogId);
+        $username = $this->userRepository->findById($blog->userId)->username;
+
+        View::render('Blog/detail-blog', [
+            "title" => $blog->title,
+            "blog" => $blog,
+            "currentUsername" => $currentUser->username,
+            "username" => $username
+        ]);
     }
 }
