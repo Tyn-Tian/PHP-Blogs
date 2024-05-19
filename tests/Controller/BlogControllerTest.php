@@ -17,24 +17,26 @@ require_once __DIR__ . "/../helper/Helper.php";
 class BlogControllerTest extends TestCase
 {
     private BlogController $blogController;
+    private UserRepository $userRepository;
+    private BlogRepository $blogRepository;
 
     protected function setUp(): void
     {
         $this->blogController = new BlogController();
-        $userRepository = new UserRepository(Database::getConnection());
+        $this->userRepository = new UserRepository(Database::getConnection());
         $sessionRepository = new SessionRepository(Database::getConnection());
-        $blogRepository = new BlogRepository(Database::getConnection());
+        $this->blogRepository = new BlogRepository(Database::getConnection());
 
-        $blogRepository->deleteAll();
+        $this->blogRepository->deleteAll();
         $sessionRepository->deleteAll();
-        $userRepository->deleteAll();
+        $this->userRepository->deleteAll();
 
         $user = new User();
         $user->id = uniqid();
         $user->email = "test@gmail.com";
         $user->username = "testName";
         $user->password = password_hash("testPass", PASSWORD_BCRYPT);
-        $userRepository->save($user);
+        $this->userRepository->save($user);
 
         $session = new Session();
         $session->id = uniqid();
@@ -72,5 +74,22 @@ class BlogControllerTest extends TestCase
         $this->blogController->postNewBlog();
 
         $this->expectOutputRegex("[Title and Content cannot be blank]");
+    }
+
+    public function testBlogDetail()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $this->blogController->blogDetail($blog->id);
+
+        $this->expectOutputRegex("[testTitle]");
+        $this->expectOutputRegex("[testContent]");
     }
 }
