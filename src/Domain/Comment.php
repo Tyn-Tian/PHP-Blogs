@@ -2,7 +2,7 @@
 
 namespace Blog\Domain;
 
-class Commnet
+class Comment
 {
     public string $id;
     public string $content;
