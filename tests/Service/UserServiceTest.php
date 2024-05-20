@@ -78,6 +78,26 @@ class UserServiceTest extends TestCase
         $this->userService->register($request);
     }
 
+    public function testRegisterUsernameDuplicate()
+    {
+        $user = new User();
+        $user->id = uniqid();
+        $user->email = "test@gmail.com";
+        $user->username = "testNameUser";
+        $user->password = "testPassUser";
+        $this->userRepository->save($user);
+
+        $this->expectException(ValidationException::class);
+
+        $request = new UserRegisterRequest();
+        $request->id = uniqid();
+        $request->email = "test@gmail.com";
+        $request->username = "testNameUser";
+        $request->password = "testPassRequest";
+
+        $this->userService->register($request);
+    }
+
     public function testLoginSuccess()
     {
         $user = new User();
