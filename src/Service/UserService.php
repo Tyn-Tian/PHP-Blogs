@@ -32,6 +32,12 @@ class UserService
                 throw new ValidationException("Email is registered");
             }
 
+            $user = $this->userRepository->findByUsername($request->username);
+
+            if ($user != null) {
+                throw new ValidationException("Username is registered");
+            }
+
             $user = new User();
             $user->id = $request->id;
             $user->email = $request->email;
