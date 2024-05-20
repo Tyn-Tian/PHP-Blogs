@@ -44,12 +44,15 @@
                 </div>
             <?php } ?>
 
-            <form class="px-md-5" method="post" action="/new-blog">
+            <form class="px-md-5" method="post" action="<?= isset($model["blog"]) ? "/blog-" . $model["blog"]->id . "/edit" : "/new-blog" ?>">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" name="title" placeholder="name@example.com">
+                    <input type="text" class="form-control" name="title" placeholder="name@example.com" value="<?= $model["blog"]->title ?? "" ?>">
                     <label for="floatingInput">Title</label>
                 </div>
                 <textarea id="default-editor" name="content" placeholder="Tell your story...">
+                    <?php if (isset($model["blog"])) {
+                        echo $model["blog"]->content;
+                    } ?>
                 </textarea>
                 <button type="submit" class="btn btn-outline-success btn-lg mt-3">Publish</button>
             </form>

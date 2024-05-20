@@ -85,7 +85,8 @@
                                 ?>
                                 <p><?= $date->format('F j, Y') ?></p>
                                 <?php if ($model["currentProfile"]) { ?>
-                                    <div class="d-flex mb-3">
+                                    <div class="d-flex mb-3 gap-3">
+                                        <a href="/blog-<?= $row["id"] ?>/edit" class="btn btn-outline-warning">Edit Blog</a>
                                         <a href="/delete/<?= $row["id"] ?>" class="btn btn-outline-danger">Delete Blog</a>
                                     </div>
                                 <?php } ?>

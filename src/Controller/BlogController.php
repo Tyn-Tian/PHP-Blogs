@@ -5,6 +5,7 @@ namespace Blog\Controller;
 use Blog\App\View;
 use Blog\Config\Database;
 use Blog\Exception\ValidationException;
+use Blog\Model\EditBlogRequest;
 use Blog\Model\NewblogRequest;
 use Blog\Repository\BlogRepository;
 use Blog\Repository\SessionRepository;
@@ -83,6 +84,46 @@ class BlogController
             View::redirect("/");
         } catch (ValidationException $exception) {
             View::redirect("/blog-$blogId/detail");
+        }
+    }
+
+    public function editBlog($blogId)
+    {
+        $blog = $this->blogRepository->findById($blogId);
+        $user = $this->sessionService->current();
+
+        if ($blog->userId != $user->id) {
+            View::redirect("/blog-$blogId/detail");
+        } else {
+            View::render('Blog/new-blog', [
+                "title" => "New Blog - PHP Blog",
+                "username" => $user->username,
+                "blog" => $blog
+            ]);
+        }
+    }
+
+    public function postEditBlog($blogId) 
+    {
+        $user = $this->sessionService->current();
+        $blog = $this->blogRepository->findById($blogId);
+
+        $request = new EditBlogRequest();
+        $request->id = $blogId;
+        $request->title = $_POST['title'];
+        $request->content = $_POST['content'];
+        $request->userId = $blog->userId;
+
+        try {
+            $this->blogService->editBlog($request, $user->id);
+            View::redirect("/");
+        } catch (ValidationException $exception) {
+            View::render('Blog/new-blog', [
+                "title" => "New Blog - PHP Blog",
+                "username" => $user->username,
+                "blog" => $blog,
+                "error" => $exception->getMessage()
+            ]);
         }
     }
 }
