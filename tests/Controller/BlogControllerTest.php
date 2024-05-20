@@ -129,4 +129,60 @@ class BlogControllerTest extends TestCase
 
         $this->expectOutputRegex("[Location: /blog-$blog->id/detail]");
     }
+
+    public function testEditBlog()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $this->blogController->editBlog($blog->id);
+
+        $this->expectOutputRegex("[textarea]");
+        $this->expectOutputRegex("[Publish]");
+        $this->expectOutputRegex("[New Blog - PHP Blog]");
+    }
+
+    public function testPostEditBlogSuccess()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $_POST['title'] = "testTitleChange";
+        $_POST['content'] = "testContentChange";
+
+        $this->blogController->postEditBlog($blog->id);
+
+        $this->expectOutputRegex("[Location: /]");
+    }
+
+    public function testPostEditBlogValidationError()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $_POST['title'] = "";
+        $_POST['content'] = "";
+
+        $this->blogController->postEditBlog($blog->id);
+
+        $this->expectOutputRegex("[Title and Content cannot be blank]");
+    }
 }
