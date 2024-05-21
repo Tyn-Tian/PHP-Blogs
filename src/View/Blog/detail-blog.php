@@ -81,13 +81,32 @@
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
-                <form class="border-bottom pb-3" method="post" action="/blog-<?= $model["blog"]->id ?>/new-comment">
+                <form class="border-bottom pb-3 mb-3" method="post" action="/blog-<?= $model["blog"]->id ?>/new-comment">
                     <div class="form-floating mb-3">
                         <textarea name="content" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
                         <label for="floatingTextarea2">Comments</label>
                     </div>
                     <button type="submit" class="btn btn-outline-success">Publish</button>
                 </form>
+
+                <?php if (isset($model["comments"])) {
+                    foreach ($model["comments"] as $comment) { 
+                        $date = new DateTime($comment['created_at']) ?>
+                        <div class="border-bottom mt-3">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div class="d-flex gap-2 align-items-center">
+                                    <i class="bi bi-person-fill" style="font-size: 1.2rem"></i>
+                                    <a class="text-black text-decoration-none" href="/<?= $comment['username'] ?>"><?= $comment['username'] ?></a>
+                                </div>
+                                <p class="p-0 mb-0"><?= $date->format('F j, Y') ?></p>
+                            </div>
+                            <p><?= $comment['content'] ?></p>
+                            <?php if ($model["currentUsername"] == $comment["username"]) { ?>
+                                <a href="/" class="btn btn-outline-danger mb-3">Delete Comment</a>
+                            <?php } ?>
+                        </div>
+                    <?php } ?>
+                <?php } ?>
             </div>
         </div>
     </div>

@@ -72,12 +72,14 @@ class BlogController
         $currentUser = $this->sessionService->current();
         $blog = $this->blogRepository->findById($blogId);
         $username = $this->userRepository->findById($blog->userId)->username;
+        $comments = $this->blogRepository->findAllCommentInBlog($blogId);
 
         View::render('Blog/detail-blog', [
             "title" => $blog->title,
             "blog" => $blog,
             "currentUsername" => $currentUser->username,
-            "username" => $username
+            "username" => $username,
+            "comments" => $comments
         ]);
     }
 
@@ -149,12 +151,14 @@ class BlogController
         } catch (ValidationException $exception) {
             $blog = $this->blogRepository->findById($blogId);
             $username = $this->userRepository->findById($blog->userId)->username;
+            $comments = $this->blogRepository->findAllCommentInBlog($blogId);
 
             View::render('Blog/detail-blog', [
                 "title" => $blog->title,
                 "blog" => $blog,
                 "currentUsername" => $user->username,
                 "username" => $username,
+                "comments" => $comments,
                 "error" => $exception->getMessage()
             ]);
         }
