@@ -93,4 +93,19 @@ class CommentRepositoryTest extends TestCase
         $findComment = $this->commentRepository->findById($comment->id);
         self::assertNull($findComment);
     }
+
+    public function testDeleteById()
+    {
+        $comment = new Comment();
+        $comment->id = uniqid();
+        $comment->content = "testCommentContent";
+        $comment->blogId = "blogId";
+        $comment->userId = "userId";
+        $this->commentRepository->save($comment);
+
+        $this->commentRepository->deleteById($comment->id);
+
+        $findComment = $this->commentRepository->findById($comment->id);    
+        self::assertNull($findComment);
+    }
 }
