@@ -5,6 +5,8 @@ namespace Blog\Controller;
 use Blog\Config\Database;
 use Blog\Domain\Session;
 use Blog\Domain\User;
+use Blog\Repository\BlogRepository;
+use Blog\Repository\CommentRepository;
 use Blog\Repository\SessionRepository;
 use Blog\Repository\UserRepository;
 use Blog\Service\SessionService;
@@ -21,7 +23,11 @@ class HomeControllerTest extends TestCase
         $this->homeController = new HomeController();
         $this->sessionRepository = new SessionRepository(Database::getConnection());
         $this->userRepository = new UserRepository(Database::getConnection());
+        $blogRepository = new BlogRepository(Database::getConnection());
+        $commentRepository = new CommentRepository(Database::getConnection());
 
+        $commentRepository->deleteAll();
+        $blogRepository->deleteAll();
         $this->sessionRepository->deleteAll();
         $this->userRepository->deleteAll();
     }

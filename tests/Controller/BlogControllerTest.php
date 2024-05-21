@@ -7,6 +7,7 @@ use Blog\Domain\Blog;
 use Blog\Domain\Session;
 use Blog\Domain\User;
 use Blog\Repository\BlogRepository;
+use Blog\Repository\CommentRepository;
 use Blog\Repository\SessionRepository;
 use Blog\Repository\UserRepository;
 use Blog\Service\SessionService;
@@ -26,7 +27,9 @@ class BlogControllerTest extends TestCase
         $this->userRepository = new UserRepository(Database::getConnection());
         $sessionRepository = new SessionRepository(Database::getConnection());
         $this->blogRepository = new BlogRepository(Database::getConnection());
+        $commentRepository = new CommentRepository(Database::getConnection());
 
+        $commentRepository->deleteAll();
         $this->blogRepository->deleteAll();
         $sessionRepository->deleteAll();
         $this->userRepository->deleteAll();
@@ -184,5 +187,41 @@ class BlogControllerTest extends TestCase
         $this->blogController->postEditBlog($blog->id);
 
         $this->expectOutputRegex("[Title and Content cannot be blank]");
+    }
+
+    public function testPostNewComment()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $_POST['content'] = "testContent";
+
+        $this->blogController->postNewComment($blog->id);
+
+        $this->expectOutputRegex("[Location: /blog-$blog->id/detail]");
+    }
+
+    public function testPostNewCommentValidationError()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $_POST['content'] = "";
+
+        $this->blogController->postNewComment($blog->id);
+
+        $this->expectOutputRegex("[Comment cannot be blank]");
     }
 }
