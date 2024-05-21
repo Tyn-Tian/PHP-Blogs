@@ -10,6 +10,7 @@ use Blog\Model\EditBlogRequest;
 use Blog\Model\NewblogRequest;
 use Blog\Model\NewBlogResponse;
 use Blog\Repository\BlogRepository;
+use Blog\Repository\CommentRepository;
 use Blog\Repository\SessionRepository;
 use Blog\Repository\UserRepository;
 use PHPUnit\Framework\TestCase;
@@ -25,8 +26,10 @@ class BlogServiceTest extends TestCase
         $this->blogRepository = new BlogRepository(Database::getConnection());
         $sessionRepository = new SessionRepository(Database::getConnection());
         $this->userRepository = new UserRepository(Database::getConnection());
+        $commentRepository = new CommentRepository(Database::getConnection());
         $this->blogService = new BlogService($this->blogRepository);
 
+        $commentRepository->deleteAll();
         $this->blogRepository->deleteAll();
         $sessionRepository->deleteAll();
         $this->userRepository->deleteAll();
@@ -162,5 +165,49 @@ class BlogServiceTest extends TestCase
 
         self::assertEquals($request->title, $response->blog->title);
         self::assertEquals($request->content, $response->blog->content);
+    }
+
+    public function testEditBlogNotExist()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $request = new EditBlogRequest();
+        $request->id = "not exist";
+        $request->title = "testTitleChange";
+        $request->content = "testContentChange";
+        $request->userId = $blog->userId;
+
+        $this->expectException(ValidationException::class);
+
+        $this->blogService->editBlog($request, $userId);
+    }
+
+    public function testEditBlogUserIdNotSame()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $request = new EditBlogRequest();
+        $request->id = $blog->id;
+        $request->title = "testTitleChange";
+        $request->content = "testContentChange";
+        $request->userId = "not same";
+
+        $this->expectException(ValidationException::class);
+
+        $this->blogService->editBlog($request, $userId);
     }
 }
