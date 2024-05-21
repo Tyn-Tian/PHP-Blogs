@@ -4,6 +4,7 @@ namespace Blog\Service;
 
 use Blog\Config\Database;
 use Blog\Domain\Blog;
+use Blog\Domain\Comment;
 use Blog\Domain\User;
 use Blog\Exception\ValidationException;
 use Blog\Model\NewCommentRequest;
@@ -15,17 +16,18 @@ use PHPUnit\Framework\TestCase;
 
 class CommentServiceTest extends TestCase
 {
+    private CommentRepository $commentRepository;
     private CommentService $commentService;
 
     protected function setUp(): void
     {
-        $commentRepository = new CommentRepository(Database::getConnection());
+        $this->commentRepository = new CommentRepository(Database::getConnection());
         $blogRepository = new BlogRepository(Database::getConnection());
         $sessionRepository = new SessionRepository(Database::getConnection());
         $userRepository = new UserRepository(Database::getConnection());
-        $this->commentService = new CommentService($commentRepository);
+        $this->commentService = new CommentService($this->commentRepository);
 
-        $commentRepository->deleteAll();
+        $this->commentRepository->deleteAll();
         $blogRepository->deleteAll();
         $sessionRepository->deleteAll();
         $userRepository->deleteAll();
@@ -71,5 +73,48 @@ class CommentServiceTest extends TestCase
 
         $this->expectException(ValidationException::class);
         $this->commentService->addNewComment($request);
+    }
+
+    public function testDeleteCommentSuccess()
+    {
+        $comment = new Comment();
+        $comment->id = uniqid();
+        $comment->content = "testCommentContent";
+        $comment->blogId = "blogId";
+        $comment->userId = "userId";
+        $this->commentRepository->save($comment);
+
+        $this->commentService->deleteComment($comment->id, "userId");
+
+        $findComment = $this->commentRepository->findById($comment->id);
+        self::assertNull($findComment);
+    }
+
+    public function testDeleteCommentNotExist()
+    {
+        $comment = new Comment();
+        $comment->id = uniqid();
+        $comment->content = "testCommentContent";
+        $comment->blogId = "blogId";
+        $comment->userId = "userId";
+        $this->commentRepository->save($comment);
+
+        $this->expectException(ValidationException::class);
+
+        $this->commentService->deleteComment("no found", "userId");
+    }
+
+    public function testDeleteCommentUserIdNotSame()
+    {
+        $comment = new Comment();
+        $comment->id = uniqid();
+        $comment->content = "testCommentContent";
+        $comment->blogId = "blogId";
+        $comment->userId = "userId";
+        $this->commentRepository->save($comment);
+
+        $this->expectException(ValidationException::class);
+
+        $this->commentService->deleteComment($comment->id, "userIdDiff");
     }
 }
