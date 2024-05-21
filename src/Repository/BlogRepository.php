@@ -85,7 +85,7 @@ class BlogRepository
 
     public function findAllCommentInBlog(string $blogId)
     {
-        $statement = $this->connection->prepare("SELECT comments.id, comments.content, comment.created_at, users.username FROM blogs JOIN comments ON (blogs.id = comments.blog_id) JOIN users ON (users.id = comments.user_id) WHERE blogs.id = ?");
+        $statement = $this->connection->prepare("SELECT comments.id, comments.content, comments.created_at, users.username FROM blogs JOIN comments ON (blogs.id = comments.blog_id) JOIN users ON (users.id = comments.user_id) WHERE blogs.id = ?");
         $statement->execute([$blogId]);
 
         try {

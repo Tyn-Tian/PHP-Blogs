@@ -4,6 +4,7 @@ namespace Blog\Repository;
 
 use Blog\Config\Database;
 use Blog\Domain\Blog;
+use Blog\Domain\Comment;
 use Blog\Domain\User;
 use PHPUnit\Framework\TestCase;
 
@@ -11,12 +12,15 @@ class BlogRepositoryTest extends TestCase
 {
     private BlogRepository $blogRepository;
     private UserRepository $userRepository;
+    private CommentRepository $commentRepository;
 
     protected function setUp(): void
     {
         $this->blogRepository = new BlogRepository(Database::getConnection());
         $this->userRepository = new UserRepository(Database::getConnection());
         $sessionRepository = new SessionRepository(Database::getConnection());
+        $this->commentRepository = new CommentRepository(Database::getConnection());
+        $this->commentRepository->deleteAll();
         $sessionRepository->deleteAll();
         $this->blogRepository->deleteAll();
         $this->userRepository->deleteAll();
@@ -178,5 +182,43 @@ class BlogRepositoryTest extends TestCase
 
         self::assertEquals($blog->title, $response->title);
         self::assertEquals($blog->content, $response->content);
+    }
+
+    public function testFindAllCommentInBlog()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $comment = new Comment();
+        $comment->id = uniqid();
+        $comment->content = "testContent";
+        $comment->userId = $userId;
+        $comment->blogId = $blog->id;
+        $this->commentRepository->save($comment);
+
+        $result = $this->blogRepository->findAllCommentInBlog($blog->id);
+        self::assertIsArray($result);
+        self::assertCount(1, $result);
+    }
+
+    public function testFindAllCommentInBlogEmpty()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $result = $this->blogRepository->findAllCommentInBlog($blog->id);
+        self::assertNull($result);
     }
 }
