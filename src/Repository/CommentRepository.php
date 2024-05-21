@@ -49,4 +49,10 @@ class CommentRepository
     {
         $this->connection->exec("DELETE FROM comments");
     }
+
+    public function deleteById(string $commentId)
+    {
+        $statement = $this->connection->prepare("DELETE FROM comments WHERE id = ?");
+        $statement->execute([$commentId]);
+    }
 }
