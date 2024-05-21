@@ -134,33 +134,4 @@ class BlogController
             ]);
         }
     }
-
-    public function postNewComment($blogId)
-    {
-        $user = $this->sessionService->current();
-
-        $request = new NewCommentRequest();
-        $request->id = uniqid();
-        $request->content = $_POST['content'];
-        $request->userId = $user->id;
-        $request->blogId = $blogId;
-
-        try {
-            $this->commentService->addNewComment($request);
-            View::redirect("/blog-$blogId/detail");
-        } catch (ValidationException $exception) {
-            $blog = $this->blogRepository->findById($blogId);
-            $username = $this->userRepository->findById($blog->userId)->username;
-            $comments = $this->blogRepository->findAllCommentInBlog($blogId);
-
-            View::render('Blog/detail-blog', [
-                "title" => $blog->title,
-                "blog" => $blog,
-                "currentUsername" => $user->username,
-                "username" => $username,
-                "comments" => $comments,
-                "error" => $exception->getMessage()
-            ]);
-        }
-    }
 }

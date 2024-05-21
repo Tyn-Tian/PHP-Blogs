@@ -52,6 +52,42 @@ class CommentControllerTest extends TestCase
         putenv("mode=test");
     }
 
+    public function testPostNewComment()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $_POST['content'] = "testContent";
+
+        $this->commentController->postNewComment($blog->id);
+
+        $this->expectOutputRegex("[Location: /blog-$blog->id/detail]");
+    }
+
+    public function testPostNewCommentValidationError()
+    {
+        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
+
+        $blog = new Blog();
+        $blog->id = uniqid();
+        $blog->title = "testTitle";
+        $blog->content = "testContent";
+        $blog->userId = $userId;
+        $this->blogRepository->save($blog);
+
+        $_POST['content'] = "";
+
+        $this->commentController->postNewComment($blog->id);
+
+        $this->expectOutputRegex("[Comment cannot be blank]");
+    }
+
     public function testPostDeleteCommentSuccess()
     {
         $blog = new Blog();

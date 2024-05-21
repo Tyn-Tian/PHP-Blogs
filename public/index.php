@@ -27,7 +27,7 @@ Router::add('GET', '/blog-{blogId}/detail', BlogController::class, 'blogDetail',
 Router::add('GET', '/delete/{blogId}', BlogController::class, 'postDeleteBlog', [MustLoginMiddleware::class]);
 Router::add('GET', '/blog-{blogId}/edit', BlogController::class, 'editBlog', [MustLoginMiddleware::class]);
 Router::add('POST', '/blog-{blogId}/edit', BlogController::class, 'postEditBlog', [MustLoginMiddleware::class]);
-Router::add('POST', '/blog-{blogId}/new-comment', BlogController::class, 'postNewComment', [MustLoginMiddleware::class]);
+Router::add('POST', '/blog-{blogId}/new-comment', CommentController::class, 'postNewComment', [MustLoginMiddleware::class]);
 Router::add('GET', '/comment/delete/{commentId}', CommentController::class, 'postDeleteComment', [MustLoginMiddleware::class]);
 
 Router::run();

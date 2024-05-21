@@ -188,40 +188,4 @@ class BlogControllerTest extends TestCase
 
         $this->expectOutputRegex("[Title and Content cannot be blank]");
     }
-
-    public function testPostNewComment()
-    {
-        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
-
-        $blog = new Blog();
-        $blog->id = uniqid();
-        $blog->title = "testTitle";
-        $blog->content = "testContent";
-        $blog->userId = $userId;
-        $this->blogRepository->save($blog);
-
-        $_POST['content'] = "testContent";
-
-        $this->blogController->postNewComment($blog->id);
-
-        $this->expectOutputRegex("[Location: /blog-$blog->id/detail]");
-    }
-
-    public function testPostNewCommentValidationError()
-    {
-        $userId = $this->userRepository->findByEmail("test@gmail.com")->id;
-
-        $blog = new Blog();
-        $blog->id = uniqid();
-        $blog->title = "testTitle";
-        $blog->content = "testContent";
-        $blog->userId = $userId;
-        $this->blogRepository->save($blog);
-
-        $_POST['content'] = "";
-
-        $this->blogController->postNewComment($blog->id);
-
-        $this->expectOutputRegex("[Comment cannot be blank]");
-    }
 }
