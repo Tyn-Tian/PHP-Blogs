@@ -102,7 +102,7 @@
                             </div>
                             <p><?= $comment['content'] ?></p>
                             <?php if ($model["currentUsername"] == $comment["username"]) { ?>
-                                <a href="/" class="btn btn-outline-danger mb-3">Delete Comment</a>
+                                <a href="/comment/delete/<?= $comment["id"] ?>" class="btn btn-outline-danger mb-3">Delete Comment</a>
                             <?php } ?>
                         </div>
                     <?php } ?>

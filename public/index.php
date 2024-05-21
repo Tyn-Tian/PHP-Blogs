@@ -5,6 +5,7 @@ use Blog\Config\Database;
 use Blog\Controller\HomeController;
 use Blog\Controller\UserController;
 use Blog\Controller\BlogController;
+use Blog\Controller\CommentController;
 use Blog\Middleware\MustLoginMiddleware;
 use Blog\Middleware\MustNotLoginMiddleware;
 use Blog\Repository\BlogRepository;
@@ -27,5 +28,6 @@ Router::add('GET', '/delete/{blogId}', BlogController::class, 'postDeleteBlog', 
 Router::add('GET', '/blog-{blogId}/edit', BlogController::class, 'editBlog', [MustLoginMiddleware::class]);
 Router::add('POST', '/blog-{blogId}/edit', BlogController::class, 'postEditBlog', [MustLoginMiddleware::class]);
 Router::add('POST', '/blog-{blogId}/new-comment', BlogController::class, 'postNewComment', [MustLoginMiddleware::class]);
+Router::add('GET', '/comment/delete/{commentId}', CommentController::class, 'postDeleteComment', [MustLoginMiddleware::class]);
 
 Router::run();
