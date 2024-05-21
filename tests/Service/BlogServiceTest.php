@@ -8,7 +8,6 @@ use Blog\Domain\User;
 use Blog\Exception\ValidationException;
 use Blog\Model\EditBlogRequest;
 use Blog\Model\NewblogRequest;
-use Blog\Model\NewBlogResponse;
 use Blog\Repository\BlogRepository;
 use Blog\Repository\CommentRepository;
 use Blog\Repository\SessionRepository;

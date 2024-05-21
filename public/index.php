@@ -8,7 +8,6 @@ use Blog\Controller\BlogController;
 use Blog\Controller\CommentController;
 use Blog\Middleware\MustLoginMiddleware;
 use Blog\Middleware\MustNotLoginMiddleware;
-use Blog\Repository\BlogRepository;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 

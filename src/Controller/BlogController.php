@@ -7,7 +7,6 @@ use Blog\Config\Database;
 use Blog\Exception\ValidationException;
 use Blog\Model\EditBlogRequest;
 use Blog\Model\NewblogRequest;
-use Blog\Model\NewCommentRequest;
 use Blog\Repository\BlogRepository;
 use Blog\Repository\CommentRepository;
 use Blog\Repository\SessionRepository;

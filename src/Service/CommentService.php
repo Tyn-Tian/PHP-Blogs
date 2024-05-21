@@ -5,7 +5,6 @@ namespace Blog\Service;
 use Blog\Config\Database;
 use Blog\Domain\Comment;
 use Blog\Exception\ValidationException;
-use Blog\Model\NewBlogResponse;
 use Blog\Model\NewCommentRequest;
 use Blog\Model\NewCommentResponse;
 use Blog\Repository\CommentRepository;
