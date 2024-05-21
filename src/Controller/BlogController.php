@@ -7,10 +7,13 @@ use Blog\Config\Database;
 use Blog\Exception\ValidationException;
 use Blog\Model\EditBlogRequest;
 use Blog\Model\NewblogRequest;
+use Blog\Model\NewCommentRequest;
 use Blog\Repository\BlogRepository;
+use Blog\Repository\CommentRepository;
 use Blog\Repository\SessionRepository;
 use Blog\Repository\UserRepository;
 use Blog\Service\BlogService;
+use Blog\Service\CommentService;
 use Blog\Service\SessionService;
 
 class BlogController
@@ -19,14 +22,17 @@ class BlogController
     private SessionService $sessionService;
     private BlogRepository $blogRepository;
     private UserRepository $userRepository;
+    private CommentService $commentService;
 
     public function __construct()
     {
         $this->blogRepository = new BlogRepository(Database::getConnection());
         $sessionRepository = new SessionRepository(Database::getConnection());
         $this->userRepository = new UserRepository(Database::getConnection());
+        $commentRepository = new CommentRepository(Database::getConnection());
         $this->blogService = new BlogService($this->blogRepository);
         $this->sessionService = new SessionService($sessionRepository, $this->userRepository);
+        $this->commentService = new CommentService($commentRepository);
     }
 
     public function newBlog()
@@ -103,7 +109,7 @@ class BlogController
         }
     }
 
-    public function postEditBlog($blogId) 
+    public function postEditBlog($blogId)
     {
         $user = $this->sessionService->current();
         $blog = $this->blogRepository->findById($blogId);
@@ -122,6 +128,33 @@ class BlogController
                 "title" => "New Blog - PHP Blog",
                 "username" => $user->username,
                 "blog" => $blog,
+                "error" => $exception->getMessage()
+            ]);
+        }
+    }
+
+    public function postNewComment($blogId)
+    {
+        $user = $this->sessionService->current();
+
+        $request = new NewCommentRequest();
+        $request->id = uniqid();
+        $request->content = $_POST['content'];
+        $request->userId = $user->id;
+        $request->blogId = $blogId;
+
+        try {
+            $this->commentService->addNewComment($request);
+            View::redirect("/blog-$blogId/detail");
+        } catch (ValidationException $exception) {
+            $blog = $this->blogRepository->findById($blogId);
+            $username = $this->userRepository->findById($blog->userId)->username;
+
+            View::render('Blog/detail-blog', [
+                "title" => $blog->title,
+                "blog" => $blog,
+                "currentUsername" => $user->username,
+                "username" => $username,
                 "error" => $exception->getMessage()
             ]);
         }

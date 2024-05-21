@@ -52,6 +52,14 @@
 
 <main>
     <div class="container mt-lg-5 mt-3" style="max-width: 700px;">
+        <?php if (isset($model["error"])) { ?>
+            <div class="row px-md-5">
+                <div class="alert alert-danger" role="alert">
+                    <?= $model["error"] ?>
+                </div>
+            </div>
+        <?php } ?>
+
         <?php $content = preg_replace('/<p([^>]*)>/', '<p$1 class="fs-5">', $model["blog"]->content); ?>
         <h1 class="fw-bold display-5 mb-0"><?= $model["blog"]->title ?></h1>
         <?php
@@ -63,5 +71,24 @@
             <a class="text-black text-decoration-none" href="/<?= $model['username'] ?>"><?= $model['username'] ?></a>
         </div>
         <?= $content ?>
+
+        <a class="btn btn-outline-success" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+            Comments
+        </a>
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Comments</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <form class="border-bottom pb-3" method="post" action="/blog-<?= $model["blog"]->id ?>/new-comment">
+                    <div class="form-floating mb-3">
+                        <textarea name="content" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                        <label for="floatingTextarea2">Comments</label>
+                    </div>
+                    <button type="submit" class="btn btn-outline-success">Publish</button>
+                </form>
+            </div>
+        </div>
     </div>
 </main>

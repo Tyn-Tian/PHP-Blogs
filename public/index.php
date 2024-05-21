@@ -7,6 +7,7 @@ use Blog\Controller\UserController;
 use Blog\Controller\BlogController;
 use Blog\Middleware\MustLoginMiddleware;
 use Blog\Middleware\MustNotLoginMiddleware;
+use Blog\Repository\BlogRepository;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
@@ -25,5 +26,6 @@ Router::add('GET', '/blog-{blogId}/detail', BlogController::class, 'blogDetail',
 Router::add('GET', '/delete/{blogId}', BlogController::class, 'postDeleteBlog', [MustLoginMiddleware::class]);
 Router::add('GET', '/blog-{blogId}/edit', BlogController::class, 'editBlog', [MustLoginMiddleware::class]);
 Router::add('POST', '/blog-{blogId}/edit', BlogController::class, 'postEditBlog', [MustLoginMiddleware::class]);
+Router::add('POST', '/blog-{blogId}/new-comment', BlogController::class, 'postNewComment', [MustLoginMiddleware::class]);
 
 Router::run();
