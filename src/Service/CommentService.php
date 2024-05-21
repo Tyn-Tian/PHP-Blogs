@@ -50,4 +50,27 @@ class CommentService
             throw new ValidationException("Comment cannot be blank");
         }
     }
+
+    public function deleteComment(string $commentId, string $userId)
+    {
+        try {
+            Database::beginTransaction();
+
+            $comment = $this->commentRepository->findById($commentId);
+
+            if ($comment == null) {
+                throw new ValidationException("Comment is not found");
+            }
+
+            if ($comment->userId != $userId) {
+                throw new ValidationException("This comment is not yours");
+            }
+
+            $this->commentRepository->deleteById($commentId);
+            Database::commit();
+        } catch (ValidationException $exception) {
+            Database::rollBack();
+            throw $exception;
+        }
+    }
 }
