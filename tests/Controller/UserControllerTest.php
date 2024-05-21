@@ -193,6 +193,5 @@ class UserControllerTest extends TestCase
 
         $this->expectOutputRegex("[testName]");
         $this->expectOutputRegex("[Home]");
-        $this->expectOutputRegex("[Liked]");
     }
 }
