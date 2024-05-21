@@ -8,15 +8,8 @@
                         PHP <span style="color: #1e88e5;">Blog</span>
                     </span>
                 </a>
-                <form class="d-none d-sm-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
             </div>
             <div class="gap-4 d-flex align-items-center">
-                <a class="text-black opacity-50 d-block d-sm-none" href="#">
-                    <i class="bi bi-search" style="font-size: 1.5rem;"></i>
-                </a>
                 <a class="d-md-flex d-none align-items-center text-decoration-none gap-2 fw-semibold text-black opacity-50" href="/new-blog">
                     <i class="bi bi-pencil-square" style="font-size: 1.5rem;"></i> Write
                 </a>
@@ -60,10 +53,7 @@
                 <div>
                     <ul class="gap-5 text-decoration-none nav border-bottom">
                         <li class="nav-item border-bottom border-black pb-3">
-                            <a class="nav-link active p-0 text-black fw-semibold " href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link p-0 text-black fw-semibold " href="/">Liked</a>
+                            <a class="nav-link active p-0 text-black fw-semibold " href="">Home</a>
                         </li>
                     </ul>
                 </div>
